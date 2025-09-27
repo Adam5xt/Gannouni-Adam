@@ -1,0 +1,1813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EditAura | Adam Gannouni - Professional Video Editor & Motion Designer</title>
+    <meta name="description" content="EditAura: Professional video editing and motion graphics by Adam Gannouni. 5+ years experience, 30+ projects completed. Specializing in modern, impactful visual storytelling.">
+    <meta property="og:title" content="EditAura | Adam Gannouni - Video Editor & Motion Designer">
+    <meta property="og:description" content="Professional video editing and motion graphics services with modern, impactful visual storytelling.">
+    <meta property="og:type" content="website">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        /* CSS Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Ocean Theme (Default) */
+            --primary: #0ea5e9;
+            --primary-light: #38bdf8;
+            --primary-dark: #0284c7;
+            --accent: #06b6d4;
+        }
+
+        /* Theme Variations */
+        .theme-ocean { --primary: #0ea5e9; --primary-light: #38bdf8; --primary-dark: #0284c7; }
+        .theme-forest { --primary: #10b981; --primary-light: #34d399; --primary-dark: #059669; }
+        .theme-sunset { --primary: #f97316; --primary-light: #fb923c; --primary-dark: #ea580c; }
+        .theme-lavender { --primary: #8b5cf6; --primary-light: #a78bfa; --primary-dark: #7c3aed; }
+        .theme-crimson { --primary: #ef4444; --primary-light: #f87171; --primary-dark: #dc2626; }
+        .theme-aurora { --primary: #06b6d4; --primary-light: #22d3ee; --primary-dark: #0891b2; }
+        .theme-nebula { --primary: #ec4899; --primary-light: #f472b6; --primary-dark: #db2777; }
+        .theme-ember { --primary: #f59e0b; --primary-light: #fbbf24; --primary-dark: #d97706; }
+        .theme-arctic { --primary: #64748b; --primary-light: #94a3b8; --primary-dark: #475569; }
+        .theme-cosmos { --primary: #6366f1; --primary-light: #818cf8; --primary-dark: #4f46e5; }
+
+        /* Dark Mode Variables (Default) */
+        body {
+            --bg-primary: #000000;
+            --bg-secondary: #0a0a0a;
+            --bg-tertiary: #111111;
+            --text-primary: #ffffff;
+            --text-secondary: #999999;
+            --text-muted: #666666;
+            --border-color: #333333;
+            --border-hover: #555555;
+            --card-bg: #111111;
+            --shadow-primary: rgba(255, 255, 255, 0.1);
+            --accent-bg: rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        /* Light Mode */
+        body.light-mode {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --card-bg: #ffffff;
+            --shadow-primary: rgba(0, 0, 0, 0.1);
+            --accent-bg: rgba(0, 0, 0, 0.02);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            font-weight: 400;
+            position: relative;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Typography Improvements */
+        h1 {
+            font-size: clamp(3.5rem, 8vw, 5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.5rem;
+        }
+
+        h2 {
+            font-size: clamp(2.5rem, 6vw, 3.5rem);
+            font-weight: 600;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.5rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            line-height: 1.3;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1.125rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Section Spacing */
+        section {
+            padding: 6rem 0;
+        }
+
+        /* 3D Background */
+        #network-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: auto;
+            opacity: 0.6;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.3s ease;
+        }
+
+        body.light-mode .header {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-icon {
+            color: var(--primary);
+            font-size: 1.75rem;
+        }
+
+        .nav-center {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-center a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: color 0.3s ease;
+            font-size: 1rem;
+            position: relative;
+        }
+
+        .nav-center a:hover {
+            color: var(--primary);
+        }
+
+        .nav-center a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-center a:hover::after {
+            width: 100%;
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-selector {
+            position: relative;
+        }
+
+        .theme-btn, .mode-btn {
+            background: var(--accent-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .theme-btn:hover, .mode-btn:hover {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        .theme-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            min-width: 280px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+            box-shadow: 0 20px 40px var(--shadow-primary);
+            z-index: 1001;
+        }
+
+        .theme-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .theme-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+
+        .theme-option {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .theme-option:hover {
+            background: var(--accent-bg);
+            border-color: var(--border-color);
+        }
+
+        .theme-option.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .theme-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            position: relative;
+        }
+
+        .theme-option.theme-ocean .theme-color { background: #0ea5e9 !important; }
+        .theme-option.theme-forest .theme-color { background: #10b981 !important; }
+        .theme-option.theme-sunset .theme-color { background: #f97316 !important; }
+        .theme-option.theme-lavender .theme-color { background: #8b5cf6 !important; }
+        .theme-option.theme-crimson .theme-color { background: #ef4444 !important; }
+        .theme-option.theme-aurora .theme-color { background: #06b6d4 !important; }
+        .theme-option.theme-nebula .theme-color { background: #ec4899 !important; }
+        .theme-option.theme-ember .theme-color { background: #f59e0b !important; }
+        .theme-option.theme-arctic .theme-color { background: #64748b !important; }
+        .theme-option.theme-cosmos .theme-color { background: #6366f1 !important; }
+
+        .contact-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .contact-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 80px;
+            position: relative;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            right: 10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--primary)15, transparent 60%);
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.1); }
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 6rem;
+            align-items: center;
+            width: 100%;
+            position: relative;
+        }
+
+        .hero-left h1 {
+            background: linear-gradient(135deg, var(--text-primary), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            font-size: 1.25rem;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-item {
+            text-align: left;
+            position: relative;
+        }
+
+        .stat-item::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 1px;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 2.5rem;
+            font-weight: 600;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .primary-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .primary-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .primary-btn:hover::before {
+            left: 100%;
+        }
+
+        .primary-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .secondary-btn {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 0.8rem 2rem;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .secondary-btn:hover {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        .upwork-btn {
+            background: #14a800;
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .upwork-btn:hover {
+            background: #0d8c00;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .hero-right {
+            position: relative;
+        }
+
+        .profile-container {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 2px solid var(--primary);
+            position: relative;
+            background: var(--bg-secondary);
+            box-shadow: 0 0 40px var(--primary)30;
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, var(--bg-primary)90);
+            padding: 2rem;
+            color: var(--text-primary);
+        }
+
+        .profile-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        /* About Section */
+        .about {
+            background: var(--bg-secondary);
+            position: relative;
+        }
+
+        .about::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            opacity: 0.6;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-text h2 {
+            background: linear-gradient(135deg, var(--text-primary), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .skill-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .skill-item:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .skill-icon {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .skill-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .skill-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Portfolio Section */
+        .portfolio {
+            background: var(--bg-primary);
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .section-title {
+            background: linear-gradient(135deg, var(--text-primary), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-description {
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .video-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .video-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .video-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .video-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px var(--shadow-primary);
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: var(--bg-primary);
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px var(--primary)40;
+        }
+
+        .play-button:hover {
+            background: var(--primary-dark);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .video-info {
+            padding: 2rem;
+        }
+
+        .video-title {
+            margin-bottom: 0.75rem;
+        }
+
+        .video-description {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .video-tools {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tool-tag {
+            background: var(--accent-bg);
+            color: var(--text-secondary);
+            padding: 0.3rem 0.7rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border: 1px solid var(--border-color);
+        }
+
+        .video-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .video-price {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .video-tag {
+            background: var(--accent-bg);
+            color: var(--text-secondary);
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Contact Section */
+        .contact {
+            background: var(--bg-secondary);
+            text-align: center;
+            position: relative;
+        }
+
+        .contact-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contact-title {
+            background: linear-gradient(135deg, var(--text-primary), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .contact-description {
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--primary);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .contact-link:hover::before {
+            left: 0;
+        }
+
+        .contact-link:hover {
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .contact-icon {
+            font-size: 1.2rem;
+        }
+
+        /* Footer */
+        .footer {
+            border-top: 1px solid var(--border-color);
+            padding: 3rem 0;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            position: relative;
+            width: 90%;
+            max-width: 1000px;
+            background: var(--bg-primary);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-video {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border: none;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .modal-close:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: scale(1.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-content, .about-content {
+                grid-template-columns: 1fr;
+                gap: 4rem;
+                text-align: center;
+            }
+
+            .hero-right {
+                max-width: 400px;
+                margin: 0 auto;
+            }
+
+            .nav-center {
+                display: none;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            section {
+                padding: 4rem 0;
+            }
+
+            .hero-stats {
+                justify-content: center;
+                gap: 2rem;
+            }
+
+            .portfolio-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-links {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .contact-link {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .theme-dropdown {
+                right: -50px;
+                min-width: 240px;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .hero-cta a, .hero-cta button {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.6s ease-out;
+        }
+    </style>
+</head>
+<body class="theme-ocean">
+    <canvas id="network-bg"></canvas>
+    
+    <!-- Video Modal -->
+    <div class="modal" id="videoModal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">
+                <i class="fas fa-times"></i>
+            </button>
+            <iframe class="modal-video" id="modalVideo" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+    </div>
+    
+    <header class="header">
+        <nav class="nav container">
+            <a href="#" class="logo">
+                <i class="fas fa-play-circle logo-icon"></i>
+                <span>EditAura</span>
+            </a>
+            <ul class="nav-center">
+                <li><a href="#about">About</a></li>
+                <li><a href="#portfolio">Portfolio</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="nav-controls">
+                <button class="mode-btn" id="modeBtn" title="Toggle Light/Dark Mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="theme-selector">
+                    <button class="theme-btn" id="themeBtn" title="Change Theme">
+                        <i class="fas fa-palette"></i>
+                        <span>Ocean</span>
+                    </button>
+                    <div class="theme-dropdown" id="themeDropdown">
+                        <div class="theme-grid">
+                            <div class="theme-option theme-ocean active" data-theme="ocean" data-name="Ocean">
+                                <div class="theme-color"></div>
+                                <div>Ocean</div>
+                            </div>
+                            <div class="theme-option theme-forest" data-theme="forest" data-name="Forest">
+                                <div class="theme-color"></div>
+                                <div>Forest</div>
+                            </div>
+                            <div class="theme-option theme-sunset" data-theme="sunset" data-name="Sunset">
+                                <div class="theme-color"></div>
+                                <div>Sunset</div>
+                            </div>
+                            <div class="theme-option theme-lavender" data-theme="lavender" data-name="Lavender">
+                                <div class="theme-color"></div>
+                                <div>Lavender</div>
+                            </div>
+                            <div class="theme-option theme-crimson" data-theme="crimson" data-name="Crimson">
+                                <div class="theme-color"></div>
+                                <div>Crimson</div>
+                            </div>
+                            <div class="theme-option theme-aurora" data-theme="aurora" data-name="Aurora">
+                                <div class="theme-color"></div>
+                                <div>Aurora</div>
+                            </div>
+                            <div class="theme-option theme-nebula" data-theme="nebula" data-name="Nebula">
+                                <div class="theme-color"></div>
+                                <div>Nebula</div>
+                            </div>
+                            <div class="theme-option theme-ember" data-theme="ember" data-name="Ember">
+                                <div class="theme-color"></div>
+                                <div>Ember</div>
+                            </div>
+                            <div class="theme-option theme-arctic" data-theme="arctic" data-name="Arctic">
+                                <div class="theme-color"></div>
+                                <div>Arctic</div>
+                            </div>
+                            <div class="theme-option theme-cosmos" data-theme="cosmos" data-name="Cosmos">
+                                <div class="theme-color"></div>
+                                <div>Cosmos</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="contact-btn" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">
+                    Get in Touch
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" id="home">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-left">
+                        <h1>Creative Video Editor & Motion Designer</h1>
+                        <p class="hero-subtitle">
+                            Crafting compelling visual narratives with cutting-edge techniques 
+                            and modern workflows that bring your vision to life.
+                        </p>
+                        
+                        <div class="hero-stats">
+                            <div class="stat-item">
+                                <span class="stat-number">5+</span>
+                                <span class="stat-label">Years Experience</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">30+</span>
+                                <span class="stat-label">Projects Completed</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">6</span>
+                                <span class="stat-label">Unique Styles</span>
+                            </div>
+                        </div>
+
+                        <div class="hero-cta">
+                            <a href="https://www.upwork.com/freelancers/~01d3a5a5b1a8a1c5a0" class="upwork-btn" target="_blank">
+                                <i class="fab fa-upwork"></i>
+                                Hire Me on Upwork
+                            </a>
+                            <a href="#portfolio" class="primary-btn">
+                                <i class="fas fa-play-circle"></i>
+                                View Portfolio
+                            </a>
+                            <a href="#contact" class="secondary-btn">
+                                <i class="fas fa-envelope"></i>
+                                Contact Me
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="hero-right">
+                        <div class="profile-container">
+                            <img src="./Assets/My Profile.png" alt="Adam Gannouni - Professional Video Editor" class="profile-image" loading="lazy">
+                            <div class="profile-overlay">
+                                <div class="profile-title">Adam Gannouni</div>
+                                <div class="profile-subtitle">Video Editor • Motion Designer • 24 Years Old</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="about">
+            <div class="container">
+                <div class="about-content">
+                    <div class="about-text">
+                        <h2>About EditAura</h2>
+                        <p>
+                            I'm Adam Gannouni, the creative force behind EditAura. With over 5 years of experience 
+                            in video editing and motion design, I specialize in transforming concepts into visually 
+                            stunning narratives that captivate audiences.
+                        </p>
+                        <p>
+                            My approach combines technical expertise with artistic vision, ensuring each project 
+                            not only meets but exceeds expectations. I work closely with clients to understand their 
+                            unique needs and deliver results that align with their brand identity and goals.
+                        </p>
+                        <a href="#contact" class="primary-btn" style="margin-top: 1.5rem;">
+                            <i class="fas fa-comments"></i>
+                            Let's Discuss Your Project
+                        </a>
+                    </div>
+                    <div class="skills">
+                        <h3>My Expertise</h3>
+                        <div class="skills-grid">
+                            <div class="skill-item">
+                                <div class="skill-icon">
+                                    <i class="fas fa-film"></i>
+                                </div>
+                                <div class="skill-title">Video Editing</div>
+                                <div class="skill-desc">Professional editing with attention to pacing, rhythm, and storytelling.</div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-icon">
+                                    <i class="fas fa-cube"></i>
+                                </div>
+                                <div class="skill-title">Motion Graphics</div>
+                                <div class="skill-desc">Dynamic animations and visual effects that enhance your message.</div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-icon">
+                                    <i class="fas fa-palette"></i>
+                                </div>
+                                <div class="skill-title">Color Grading</div>
+                                <div class="skill-desc">Creating the perfect mood and tone through expert color correction.</div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-icon">
+                                    <i class="fas fa-music"></i>
+                                </div>
+                                <div class="skill-title">Audio Design</div>
+                                <div class="skill-desc">Enhancing visuals with carefully selected soundscapes and music.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="portfolio" class="portfolio">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Portfolio Showcase</h2>
+                    <p class="section-description">
+                        A selection of my recent work demonstrating various editing styles and techniques
+                    </p>
+                </div>
+
+                <div class="portfolio-grid">
+                    <div class="video-card" data-video-id="cOmlFcX9Ckk">
+                        <div class="video-container">
+                            <img class="video-thumbnail" src="https://img.youtube.com/vi/cOmlFcX9Ckk/maxresdefault.jpg" alt="Simple Black & White Video Editing Example" loading="lazy">
+                            <div class="play-button">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3 class="video-title">Simple Black & White</h3>
+                            <p class="video-description">
+                                Clean, minimalistic editing style using black and white animations 
+                                for clear, elegant messaging with smooth motion and simplicity.
+                            </p>
+                            <div class="video-tools">
+                                <span class="tool-tag">Adobe Premiere Pro</span>
+                                <span class="tool-tag">After Effects</span>
+                                <span class="tool-tag">Minimal Design</span>
+                            </div>
+                            <div class="video-footer">
+                                <div class="video-price">60 TND</div>
+                                <div class="video-tag">Minimalist</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="video-card" data-video-id="epHF-2r2LRM">
+                        <div class="video-container">
+                            <img class="video-thumbnail" src="https://img.youtube.com/vi/epHF-2r2LRM/maxresdefault.jpg" alt="Advanced Black & Colors Video Editing Example" loading="lazy">
+                            <div class="play-button">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3 class="video-title">Advanced Black & Colors</h3>
+                            <p class="video-description">
+                                Bold, dynamic editing blending deep blacks with vibrant accents 
+                                for high contrast and visual impact with advanced motion design.
+                            </p>
+                            <div class="video-tools">
+                                <span class="tool-tag">Adobe Premiere Pro</span>
+                                <span class="tool-tag">After Effects</span>
+                                <span class="tool-tag">Color Grading</span>
+                            </div>
+                            <div class="video-footer">
+                                <div class="video-price">85 TND</div>
+                                <div class="video-tag">Dynamic</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="video-card" data-video-id="OoS3LOtkxXE">
+                        <div class="video-container">
+                            <img class="video-thumbnail" src="https://img.youtube.com/vi/OoS3LOtkxXE/maxresdefault.jpg" alt="Apple Style Video Editing Example" loading="lazy">
+                            <div class="play-button">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3 class="video-title">Apple Style</h3>
+                            <p class="video-description">
+                                Sleek, polished editing inspired by Apple's design ethos—clean lines, 
+                                smooth animations, white space, and elegant typography.
+                            </p>
+                            <div class="video-tools">
+                                <span class="tool-tag">Final Cut Pro</span>
+                                <span class="tool-tag">Motion</span>
+                                <span class="tool-tag">Premium Design</span>
+                            </div>
+                            <div class="video-footer">
+                                <div class="video-price">190 TND</div>
+                                <div class="video-tag">Premium</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="video-card" data-video-id="2cPzgvBX16s">
+                        <div class="video-container">
+                            <img class="video-thumbnail" src="https://img.youtube.com/vi/2cPzgvBX16s/maxresdefault.jpg" alt="OrbitCut Video Editing Example" loading="lazy">
+                            <div class="play-button">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3 class="video-title">OrbitCut</h3>
+                            <p class="video-description">
+                                Sleek editing with fast 3D camera moves and sharp motion paths. 
+                                Creates depth, flow, and energy—perfect for modern, high-impact content.
+                            </p>
+                            <div class="video-tools">
+                                <span class="tool-tag">Cinema 4D</span>
+                                <span class="tool-tag">After Effects</span>
+                                <span class="tool-tag">3D Animation</span>
+                            </div>
+                            <div class="video-footer">
+                                <div class="video-price">210 TND</div>
+                                <div class="video-tag">3D Motion</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="video-card" data-video-id="TsRmZjIJLL0">
+                        <div class="video-container">
+                            <img class="video-thumbnail" src="https://img.youtube.com/vi/TsRmZjIJLL0/maxresdefault.jpg" alt="InkRush Video Editing Example" loading="lazy">
+                            <div class="play-button">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3 class="video-title">InkRush</h3>
+                            <p class="video-description">
+                                Bold editing with black-dominant theme, focused on simple body animations. 
+                                Mixes clean motion, sharp cuts, and subtle color accents.
+                            </p>
+                            <div class="video-tools">
+                                <span class="tool-tag">Adobe Premiere Pro</span>
+                                <span class="tool-tag">After Effects</span>
+                                <span class="tool-tag">Character Animation</span>
+                            </div>
+                            <div class="video-footer">
+                                <div class="video-price">135 TND</div>
+                                <div class="video-tag">Bold</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="video-card" data-video-id="-5ifnqAYhfs">
+                        <div class="video-container">
+                            <img class="video-thumbnail" src="https://img.youtube.com/vi/-5ifnqAYhfs/maxresdefault.jpg" alt="AxisBlend Video Editing Example" loading="lazy">
+                            <div class="play-button">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3 class="video-title">AxisBlend</h3>
+                            <p class="video-description">
+                                Hybrid editing merging 2D and 3D motion. Blends flat graphics with depth 
+                                and camera movement across all axes for dynamic results.
+                            </p>
+                            <div class="video-tools">
+                                <span class="tool-tag">Cinema 4D</span>
+                                <span class="tool-tag">After Effects</span>
+                                <span class="tool-tag">Hybrid Animation</span>
+                            </div>
+                            <div class="video-footer">
+                                <div class="video-price">240 TND</div>
+                                <div class="video-tag">Hybrid</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 3rem;">
+                    <a href="https://www.upwork.com/freelancers/~01d3a5a5b1a8a1c5a0" class="upwork-btn" target="_blank" style="font-size: 1.1rem; padding: 1rem 2.5rem;">
+                        <i class="fab fa-upwork"></i>
+                        Hire Me on Upwork for Your Project
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact">
+            <div class="container">
+                <div class="contact-content">
+                    <h2 class="contact-title">Let's work together</h2>
+                    <p class="contact-description">
+                        Ready to bring your vision to life? Let's discuss your project and create something amazing together.
+                    </p>
+                    
+                    <div class="contact-links">
+                        <a href="https://www.instagram.com/adam5xt/" class="contact-link" target="_blank" aria-label="Follow me on Instagram">
+                            <i class="fab fa-instagram contact-icon"></i>
+                            <span>Instagram</span>
+                        </a>
+                        <a href="https://www.tiktok.com/@adam5xt" class="contact-link" target="_blank" aria-label="Follow me on TikTok">
+                            <i class="fab fa-tiktok contact-icon"></i>
+                            <span>TikTok</span>
+                        </a>
+                        <a href="https://wa.me/21628085075" class="contact-link" target="_blank" aria-label="Contact me on WhatsApp">
+                            <i class="fab fa-whatsapp contact-icon"></i>
+                            <span>WhatsApp</span>
+                        </a>
+                        <a href="https://www.upwork.com/freelancers/~01d3a5a5b1a8a1c5a0" class="contact-link" target="_blank" aria-label="Hire me on Upwork">
+                            <i class="fab fa-upwork contact-icon"></i>
+                            <span>Upwork</span>
+                        </a>
+                    </div>
+
+                    <a href="https://www.upwork.com/freelancers/~01d3a5a5b1a8a1c5a0" class="upwork-btn" target="_blank" style="font-size: 1.1rem; padding: 1rem 2.5rem;">
+                        <i class="fab fa-upwork"></i>
+                        Start a Project on Upwork
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 EditAura by Adam Gannouni. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 3D Network Background
+        let scene, camera, renderer, particles, mouse, raycaster;
+        const nodes = [];
+        const connections = [];
+        let currentTheme = 'ocean';
+        let isDark = true;
+
+        // Theme colors
+        const themeColors = {
+            ocean: 0x0ea5e9,
+            forest: 0x10b981,
+            sunset: 0xf97316,
+            lavender: 0x8b5cf6,
+            crimson: 0xef4444,
+            aurora: 0x06b6d4,
+            nebula: 0xec4899,
+            ember: 0xf59e0b,
+            arctic: 0x64748b,
+            cosmos: 0x6366f1
+        };
+
+        function init3DBackground() {
+            const canvas = document.getElementById('network-bg');
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x000000, 0);
+
+            // Mouse interaction
+            mouse = new THREE.Vector2();
+            raycaster = new THREE.Raycaster();
+
+            // Create network nodes
+            const nodeGeometry = new THREE.SphereGeometry(0.05, 8, 6);
+            const nodeCount = 150;
+
+            for (let i = 0; i < nodeCount; i++) {
+                const nodeMaterial = new THREE.MeshBasicMaterial({ 
+                    color: themeColors[currentTheme],
+                    transparent: true,
+                    opacity: 0.8
+                });
+                const node = new THREE.Mesh(nodeGeometry, nodeMaterial);
+                
+                node.position.x = (Math.random() - 0.5) * 20;
+                node.position.y = (Math.random() - 0.5) * 20;
+                node.position.z = (Math.random() - 0.5) * 20;
+                
+                node.userData = {
+                    originalPosition: node.position.clone(),
+                    velocity: new THREE.Vector3(
+                        (Math.random() - 0.5) * 0.002,
+                        (Math.random() - 0.5) * 0.002,
+                        (Math.random() - 0.5) * 0.002
+                    )
+                };
+                
+                scene.add(node);
+                nodes.push(node);
+            }
+
+            // Create connections
+            const lineMaterial = new THREE.LineBasicMaterial({ 
+                color: themeColors[currentTheme],
+                transparent: true,
+                opacity: 0.2
+            });
+
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    const distance = nodes[i].position.distanceTo(nodes[j].position);
+                    if (distance < 3 && Math.random() < 0.1) {
+                        const geometry = new THREE.BufferGeometry().setFromPoints([
+                            nodes[i].position,
+                            nodes[j].position
+                        ]);
+                        const line = new THREE.Line(geometry, lineMaterial.clone());
+                        scene.add(line);
+                        connections.push({
+                            line: line,
+                            nodeA: nodes[i],
+                            nodeB: nodes[j],
+                            originalOpacity: 0.2
+                        });
+                    }
+                }
+            }
+
+            camera.position.z = 8;
+            
+            // Mouse move listener
+            canvas.addEventListener('mousemove', onMouseMove);
+            canvas.addEventListener('click', onMouseClick);
+            
+            // Start animation
+            animate();
+        }
+
+        function onMouseMove(event) {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+            // Update raycaster
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(nodes);
+
+            // Reset all nodes
+            nodes.forEach(node => {
+                node.material.opacity = 0.8;
+                node.scale.setScalar(1);
+            });
+            connections.forEach(conn => {
+                conn.line.material.opacity = conn.originalOpacity;
+            });
+
+            // Highlight intersected nodes and their connections
+            if (intersects.length > 0) {
+                const intersectedNode = intersects[0].object;
+                intersectedNode.material.opacity = 1;
+                intersectedNode.scale.setScalar(1.5);
+
+                connections.forEach(conn => {
+                    if (conn.nodeA === intersectedNode || conn.nodeB === intersectedNode) {
+                        conn.line.material.opacity = 0.8;
+                        conn.nodeA.material.opacity = 1;
+                        conn.nodeB.material.opacity = 1;
+                    }
+                });
+            }
+        }
+
+        function onMouseClick(event) {
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(nodes);
+            
+            if (intersects.length > 0) {
+                const node = intersects[0].object;
+                // Create ripple effect
+                const ripple = node.clone();
+                ripple.material = ripple.material.clone();
+                ripple.scale.setScalar(0.1);
+                scene.add(ripple);
+                
+                const animate = () => {
+                    ripple.scale.multiplyScalar(1.1);
+                    ripple.material.opacity *= 0.95;
+                    if (ripple.material.opacity > 0.01) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        scene.remove(ripple);
+                    }
+                };
+                animate();
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Animate nodes
+            nodes.forEach(node => {
+                node.position.add(node.userData.velocity);
+                
+                // Boundary bounce
+                if (Math.abs(node.position.x) > 10) node.userData.velocity.x *= -1;
+                if (Math.abs(node.position.y) > 10) node.userData.velocity.y *= -1;
+                if (Math.abs(node.position.z) > 10) node.userData.velocity.z *= -1;
+            });
+
+            // Update connections
+            connections.forEach(conn => {
+                const positions = conn.line.geometry.attributes.position.array;
+                positions[0] = conn.nodeA.position.x;
+                positions[1] = conn.nodeA.position.y;
+                positions[2] = conn.nodeA.position.z;
+                positions[3] = conn.nodeB.position.x;
+                positions[4] = conn.nodeB.position.y;
+                positions[5] = conn.nodeB.position.z;
+                conn.line.geometry.attributes.position.needsUpdate = true;
+            });
+
+            // Rotate camera slightly based on mouse
+            if (mouse.x !== undefined) {
+                camera.position.x += (mouse.x * 0.5 - camera.position.x) * 0.01;
+                camera.position.y += (mouse.y * 0.5 - camera.position.y) * 0.01;
+                camera.lookAt(scene.position);
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        function updateNetworkTheme(theme) {
+            currentTheme = theme;
+            const color = themeColors[theme];
+            
+            nodes.forEach(node => {
+                node.material.color.setHex(color);
+            });
+            
+            connections.forEach(conn => {
+                conn.line.material.color.setHex(color);
+            });
+        }
+
+        // Window resize handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Theme Management
+        const themeBtn = document.getElementById('themeBtn');
+        const themeDropdown = document.getElementById('themeDropdown');
+        const modeBtn = document.getElementById('modeBtn');
+        const body = document.body;
+
+        // Toggle theme dropdown
+        themeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            themeDropdown.classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', () => {
+            themeDropdown.classList.remove('active');
+        });
+
+        // Prevent dropdown from closing when clicking inside
+        themeDropdown.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // Theme switching
+        document.querySelectorAll('.theme-option').forEach(option => {
+            option.addEventListener('click', () => {
+                const theme = option.dataset.theme;
+                const name = option.dataset.name;
+                
+                // Remove active class from all options
+                document.querySelectorAll('.theme-option').forEach(opt => {
+                    opt.classList.remove('active');
+                });
+                
+                // Add active class to selected option
+                option.classList.add('active');
+                
+                // Remove all theme classes
+                body.className = body.className.replace(/theme-\w+/g, '');
+                
+                // Add new theme class
+                body.classList.add(`theme-${theme}`);
+                
+                // Update button text
+                themeBtn.querySelector('span').textContent = name;
+                
+                // Update 3D network theme
+                updateNetworkTheme(theme);
+                
+                // Close dropdown
+                themeDropdown.classList.remove('active');
+                
+                // Save theme preference
+                localStorage.setItem('preferred-theme', theme);
+            });
+        });
+
+        // Light/Dark mode toggle
+        function updateHeaderBackground() {
+            const header = document.querySelector('.header');
+            const currentMode = body.classList.contains('light-mode') ? 'light' : 'dark';
+            
+            if (window.scrollY > 100) {
+                header.style.background = currentMode === 'dark' ? 'rgba(0, 0, 0, 0.95)' : 'rgba(255, 255, 255, 0.95)';
+            } else {
+                header.style.background = currentMode === 'dark' ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.9)';
+            }
+        }
+
+        modeBtn.addEventListener('click', () => {
+            isDark = !isDark;
+            body.classList.toggle('light-mode');
+            
+            const icon = modeBtn.querySelector('i');
+            if (isDark) {
+                icon.className = 'fas fa-moon';
+                modeBtn.title = 'Switch to Light Mode';
+            } else {
+                icon.className = 'fas fa-sun';
+                modeBtn.title = 'Switch to Dark Mode';
+            }
+            
+            // Update header background immediately
+            updateHeaderBackground();
+            
+            // Save mode preference
+            localStorage.setItem('preferred-mode', isDark ? 'dark' : 'light');
+        });
+
+        // Video Modal functionality
+        const modal = document.getElementById('videoModal');
+        const modalVideo = document.getElementById('modalVideo');
+        const modalClose = document.getElementById('modalClose');
+
+        function openModal(videoId) {
+            const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&showinfo=0`;
+            modalVideo.src = embedUrl;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            modalVideo.src = '';
+            document.body.style.overflow = ''; // Re-enable scrolling
+        }
+
+        // Video card click handlers
+        document.querySelectorAll('.video-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                // Don't trigger if clicking on a link or button
+                if (e.target.tagName === 'A' || e.target.closest('a')) return;
+                
+                const videoId = card.getAttribute('data-video-id');
+                openModal(videoId);
+            });
+        });
+
+        // Modal close handlers
+        modalClose.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+
+        // Load saved preferences
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('preferred-theme') || 'ocean';
+            const savedMode = localStorage.getItem('preferred-mode') || 'dark';
+            
+            // Set theme
+            const themeOption = document.querySelector(`[data-theme="${savedTheme}"]`);
+            if (themeOption) {
+                themeOption.click();
+            }
+            
+            // Set mode
+            if (savedMode === 'light') {
+                modeBtn.click();
+            }
+            
+            // Initialize 3D background
+            setTimeout(init3DBackground, 100);
+            
+            // Add fade-in animations to elements as they scroll into view
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                    }
+                });
+            }, observerOptions);
+
+            // Observe elements for animation
+            document.querySelectorAll('.video-card, .skill-item, .about-text, .section-header').forEach(el => {
+                observer.observe(el);
+            });
+
+            // Set initial header background
+            updateHeaderBackground();
+        });
+
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Header background on scroll
+        window.addEventListener('scroll', updateHeaderBackground);
+    </script>
+</body>
+</html>
